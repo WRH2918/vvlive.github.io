@@ -9,6 +9,7 @@
 	/*web页面向app传递的json数据(json string/js Object)，应用被拉起或是首次安装时，通过相应的android/ios api可以获取此数据*/
 	// var data = OpenInstall.parseUrlParams();///openinstall.js中提供的工具函数，解析url中的所有查询参数
     var u = window.navigator.userAgent
+    var ua = navigator.userAgent.toLowerCase()
     var isIOS = !!u.match(/\(i[^]+( U)? CPU.+Mac OS X/)
     var iosVer = ua.match(/os (.*?) like mac os/)
     function getQueryString(name) {
