@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<body>
+<!-- 以下为openinstall集成代码，建议在html文档中尽量靠前放置，加快初始化过程 -->
+<!-- 强烈建议直接引用下面的cdn加速链接，以得到最及时的更新，我们将持续跟踪各种主流浏览器的变化，提供最好的服务；不推荐将此js文件下载到自己的服务器-->
+<script type="text/javascript" charset="UTF-8" src="https://web.cdn.openinstall.io/openinstall.js"></script>
+<script type="text/javascript">
+  	//OpenInstall初始化时将与openinstall服务器交互，应尽可能早的调用
+	/*web页面向app传递的json数据(json string/js Object)，应用被拉起或是首次安装时，通过相应的android/ios api可以获取此数据*/
+	// var data = OpenInstall.parseUrlParams();///openinstall.js中提供的工具函数，解析url中的所有查询参数
+    var u = window.navigator.userAgent
+    var isIOS = !!u.match(/\(i[^]+( U)? CPU.+Mac OS X/)
+    var iosVer = ua.match(/os (.*?) like mac os/)
+    function getQueryString(name) {
+        //获取URL中的参数
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    var iosSystemVersion = iosVer
+        ? iosVer[1].replace(/_/g, ".")
+        : "" /**** ios：版本号  ****/
+    var data = {
+        appId: getQueryString("gameId") || "lanlan002",
+        deviceType: isIOS ? 2 : 1 /*2:ios,1:安卓*/,
+        isLog: "isLog",
+        mcId: getQueryString("mcId"),
+        scId: getQueryString("scId"),
+        iosSystemVersion: iosSystemVersion,
+    };
+	new OpenInstall({
+		/*appKey必选参数，平台为每个应用分配的ID*/
+		appKey : "p943lv",
+		/*直接指定渠道编号，默认通过当前页url中的channelCode参数自动检测渠道编号*/
+		//channelCode:"渠道编号",
+		/*自定义遮罩的html*/
+		//mask:function(){
+		//  return "<div id='_shadow' style='position:fixed;left:0;top:0;background:rgba(0,255,0,0.5);filter:alpha(opacity=50);width:100%;height:100%;z-index:10000;'></div>"
+		//},
+		/*初始化完成的回调函数，可选*/
+		onready : function() {
+			/*在app已安装的情况尝试拉起app*/
+			//this.schemeWakeup({data:data,channelCode:"test-channelcode"});//延迟指定绑定参数与渠道编号
+			this.schemeWakeup();
+			
+			/*用户点击某个按钮时(假定按钮id为downloadButton)，安装app*/
+			var m = this, button = document.getElementById("downloadButton");
+			button.onclick = function() {
+				//this.wakeupOrInstall({data:data,channelCode:"test-channelcode"});//延迟指定绑定参数与渠道编号
+				m.wakeupOrInstall({data:data,channelCode:"test-channelcode"});
+				/*跳过scheme拉起，直接安装*/
+				//m.install({data:data,channelCode:"test-channelcode"});//延迟指定绑定参数与渠道编号
+				return false;
+			}
+		}
+	}, data);
+</script>
+<h2>我的第一段 JavaScript</h2>
+
+<button type="button" id="downloadButton">
+下载
+</button>
+
+<p id="demo" style="background-color: burlywood;"></p>
+
+</body>
+</html>
